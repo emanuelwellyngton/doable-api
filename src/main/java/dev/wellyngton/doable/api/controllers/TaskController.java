@@ -1,5 +1,6 @@
 package dev.wellyngton.doable.api.controllers;
 
+import dev.wellyngton.doable.api.models.Status;
 import dev.wellyngton.doable.api.models.Task;
 import dev.wellyngton.doable.api.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class TaskController {
 
     @GetMapping
     public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+        return taskRepository.findByStatusNot(Status.DONE);
     }
 
     @GetMapping("/{id}")
