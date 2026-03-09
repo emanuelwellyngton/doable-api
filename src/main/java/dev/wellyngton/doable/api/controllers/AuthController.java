@@ -4,9 +4,11 @@ import dev.wellyngton.doable.api.dto.AuthResponse;
 import dev.wellyngton.doable.api.dto.LoginRequest;
 import dev.wellyngton.doable.api.dto.RegisterRequest;
 import dev.wellyngton.doable.security.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,7 +19,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
             AuthResponse response = userService.register(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -27,11 +29,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {
             AuthResponse response = userService.login(request);
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }

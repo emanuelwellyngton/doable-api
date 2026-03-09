@@ -58,7 +58,8 @@ public class UserService implements UserDetailsService {
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
-        User user = (User) loadUserByUsername(request.getUsername());
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + request.getUsername()));
         String token = jwtService.generateToken(user);
         return new AuthResponse(token, user.getUsername());
     }
