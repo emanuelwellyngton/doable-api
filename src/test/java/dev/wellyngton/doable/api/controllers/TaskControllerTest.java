@@ -3,9 +3,12 @@ package dev.wellyngton.doable.api.controllers;
 import dev.wellyngton.doable.api.models.Status;
 import dev.wellyngton.doable.api.models.Task;
 import dev.wellyngton.doable.api.repositories.TaskRepository;
+import dev.wellyngton.doable.security.JwtService;
+import dev.wellyngton.doable.security.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,7 +30,14 @@ class TaskControllerTest {
     @MockitoBean
     private TaskRepository taskRepository;
 
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UserService userService;
+
     @Test
+    @WithMockUser
     void getAllTasks_shouldReturnToDoAndInProgressTasks() throws Exception {
         Task todoTask = new Task();
         todoTask.setId(1L);
@@ -49,6 +59,7 @@ class TaskControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getAllTasks_shouldReturnEmptyListWhenAllTasksAreDone() throws Exception {
         when(taskRepository.findByStatusNot(Status.DONE)).thenReturn(List.of());
 
