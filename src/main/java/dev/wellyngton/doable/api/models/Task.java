@@ -1,5 +1,6 @@
 package dev.wellyngton.doable.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,6 +23,11 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
